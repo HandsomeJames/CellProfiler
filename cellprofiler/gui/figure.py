@@ -1111,9 +1111,6 @@ class Figure(wx.Frame):
             if idx % dimensions[1] != 0:
                 ax.set_yticklabels([])
 
-            import IPython
-            IPython.embed()
-
             ax.imshow(img, cmap=cmap)
 
             self.figure.add_subplot(ax)

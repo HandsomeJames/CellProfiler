@@ -1391,8 +1391,18 @@ class NamesAndTypes(cpm.Module):
             rescale = self.single_rescale.value
             if rescale == INTENSITY_MANUAL:
                 rescale = self.manual_rescale.value
-            self.add_image_provider(workspace, name, load_choice,
-                                    rescale, image_set[0])
+            self.add_image_provider(workspace, name, load_choice, rescale, image_set[0])
+
+            self.add_simple_image(
+                workspace=workspace,
+                name=name,
+                load_choice=load_choice,
+                rescale=rescale,
+                url=image_set[0],
+                series=None,
+                index=None,
+                channel=None
+            )
         else:
             for group, stack in zip(self.assignments + self.single_images,
                                     image_set):
@@ -1482,20 +1492,28 @@ class NamesAndTypes(cpm.Module):
 
     def add_simple_image(self, workspace, name, load_choice, rescale, url, series, index, channel):
         m = workspace.measurements
-        url = m.alter_url_post_create_batch(url)
-        if load_choice == LOAD_AS_COLOR_IMAGE:
-            provider = ColorImageProvider(name, url, series, index, rescale)
-        elif load_choice == LOAD_AS_GRAYSCALE_IMAGE:
-            provider = MonochromeImageProvider(name, url, series, index,
-                                               channel, rescale)
-        elif load_choice == LOAD_AS_ILLUMINATION_FUNCTION:
-            provider = MonochromeImageProvider(name, url, series, index,
-                                               channel, False)
-        elif load_choice == LOAD_AS_MASK:
-            provider = MaskImageProvider(name, url, series, index, channel)
+
+        import loadimages
+        import os.path
+
+        provider = loadimages.LoadImagesImageProvider(
+            "example",
+            "/Users/agoodman/Desktop/example",
+            "nucleus.tiff"
+        )
+        # url = m.alter_url_post_create_batch(url)
+        # if load_choice == LOAD_AS_COLOR_IMAGE:
+        #     provider = ColorImageProvider(name, url, series, index, rescale)
+        # elif load_choice == LOAD_AS_GRAYSCALE_IMAGE:
+        #     provider = MonochromeImageProvider(name, url, series, index,
+        #                                        channel, rescale)
+        # elif load_choice == LOAD_AS_ILLUMINATION_FUNCTION:
+        #     provider = MonochromeImageProvider(name, url, series, index,
+        #                                        channel, False)
+        # elif load_choice == LOAD_AS_MASK:
+        #     provider = MaskImageProvider(name, url, series, index, channel)
         workspace.image_set.providers.append(provider)
-        self.add_provider_measurements(provider, workspace.measurements, \
-                                       cpmeas.IMAGE)
+        self.add_provider_measurements(provider, workspace.measurements, cpmeas.IMAGE)
 
     @staticmethod
     def add_provider_measurements(provider, m, image_or_objects):
