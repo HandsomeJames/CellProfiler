@@ -192,6 +192,9 @@ class Thresholding(cellprofiler.module.ImageProcessing):
 
         images.add(y_name, y)
 
+        import IPython
+        IPython.embed()
+
         if self.show_window:
             workspace.display_data.x_data = x_data
 

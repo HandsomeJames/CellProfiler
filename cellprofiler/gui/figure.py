@@ -1077,9 +1077,7 @@ class Figure(wx.Frame):
         self.__gridspec = matplotlib.gridspec.GridSpec(*shape)
 
     def __set_grid_config(self, image):
-        z, _, _ = image.shape
-
-        center = z / 2
+        center = image.shape[0] / 2
 
         # Determine the indices of the first and last slices to display.
         start = max(0, center - 4)
@@ -1112,6 +1110,9 @@ class Figure(wx.Frame):
 
             if idx % dimensions[1] != 0:
                 ax.set_yticklabels([])
+
+            import IPython
+            IPython.embed()
 
             ax.imshow(img, cmap=cmap)
 
